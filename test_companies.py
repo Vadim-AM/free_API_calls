@@ -11,16 +11,16 @@ class TestCompanies:
     def test_companies_response_and_schema(self):
         r = requests.get(f'{config.COMPANIES_URL}?limit=999')
         assert r.status_code == 200
-        for i in r.json()['data']:
-            assert Company.parse_obj(i)
+        for company in r.json().get('data'):
+            assert Company.parse_obj(company)
 
     @pytest.mark.parametrize('status', Statuses)
     def test_companies_status(self, status: str):
         stat = status.__str__().split('.')[1]
         r = requests.get(f'{config.COMPANIES_URL}?status={stat}&limit=10')
         assert r.status_code == 200
-        for i in r.json()['data']:
-            assert Company.parse_obj(i).company_status == status
+        for company in r.json()['data']:
+            assert Company.parse_obj(company).company_status == status
 
     @pytest.mark.parametrize('limit, offset, result', [('3', '7', 0), ('7', '3', 4), ('0', '0', 0)])
     def test_companies_search_limit_offset(self, limit: str, offset: str, result: int):
