@@ -22,5 +22,5 @@ def active_company_ids():
     r = requests.get(config.COMPANIES_URL)
     active_ids = []
     for company in r.json()['data']:
-        active_ids.append(company.company_id)
+        active_ids.append(company.get('company_id'))
     return active_ids
